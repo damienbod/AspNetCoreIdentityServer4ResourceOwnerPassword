@@ -1,0 +1,6 @@
+AspNetCoreResourceServer/bin
+AspNetCoreResourceServer/obj
+ConsoleResourceOwnerFlowRefreshToken/obj
+QuickstartIdentityServer/wwwroot
+QuickstartIdentityServer/bin
+QuickstartIdentityServer/obj
