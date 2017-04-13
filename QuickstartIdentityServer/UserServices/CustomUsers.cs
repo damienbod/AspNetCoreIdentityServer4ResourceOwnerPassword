@@ -13,8 +13,12 @@ namespace CustomIdentityServer4.UserServices
     {
         public static List<CustomUser> Users = new List<CustomUser>
         {
-            new CustomUser{SubjectId = "818727", UserName = "alice", Password = "alice", Email= "me@email.ch",
-                Claims = 
+            new CustomUser{
+                SubjectId = "818727",
+                UserName = "alice",
+                Password = "alice",
+                Email = "me@email.ch",
+                Claims = new List<Claim>
                 {
                     new Claim(JwtClaimTypes.Name, "Alice Smith"),
                     new Claim(JwtClaimTypes.GivenName, "Alice"),
@@ -25,8 +29,12 @@ namespace CustomIdentityServer4.UserServices
                     new Claim(JwtClaimTypes.Address, @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServerConstants.ClaimValueTypes.Json)
                 }
             },
-            new CustomUser{SubjectId = "88421113", UserName = "bob", Password = "bob", Email= "me@email.ch",
-                Claims = 
+            new CustomUser{
+                SubjectId = "88421113",
+                UserName = "bob",
+                Password = "bob",
+                Email = "me@email.ch",
+                Claims = new List<Claim>
                 {
                     new Claim(JwtClaimTypes.Name, "Bob Smith"),
                     new Claim(JwtClaimTypes.GivenName, "Bob"),

@@ -18,13 +18,13 @@ namespace ConsoleResourceOwnerFlowRefreshToken
         {
             Console.Title = "Console ResourceOwner Flow RefreshToken";
 
-            var disco = await DiscoveryClient.GetAsync("TODO_add_aut");
+            var disco = await DiscoveryClient.GetAsync("https://localhost:44318");
             if (disco.IsError) throw new Exception(disco.Error);
 
             _tokenClient = new TokenClient(
                 disco.TokenEndpoint,
-                "roclient",
-                "secret");
+                "resourceownerclient",
+                "dataEventRecordsSecret");
 
             var response = await RequestTokenAsync();
             //response.Show();
@@ -52,8 +52,8 @@ namespace ConsoleResourceOwnerFlowRefreshToken
         {
             return await _tokenClient.RequestResourceOwnerPasswordAsync(
                 "bob",
-                "bob", 
-                "api1 api2.read_only offline_access");
+                "bob",
+                "email openid dataEventRecords");
         }
 
         private static async Task<TokenResponse> RefreshTokenAsync(string refreshToken)
@@ -65,7 +65,7 @@ namespace ConsoleResourceOwnerFlowRefreshToken
 
         static async Task CallServiceAsync(string token)
         {
-            var baseAddress = "https://localhist:5000";
+            var baseAddress = "https://localhost:44318/";
 
             var client = new HttpClient
             {

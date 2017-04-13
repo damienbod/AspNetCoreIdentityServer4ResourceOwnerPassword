@@ -34,7 +34,6 @@ namespace CustomIdentityServer4
             var cert = new X509Certificate2(Path.Combine(_environment.ContentRootPath, "damienbodserver.pfx"), "");
 
             services.AddMvc();
-
             services.AddIdentityServer()
                 .AddSigningCredential(cert)
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
@@ -58,8 +57,6 @@ namespace CustomIdentityServer4
             }
 
             app.UseStaticFiles();
-
-            app.UseIdentity();
             app.UseIdentityServer();
 
             app.UseMvc(routes =>

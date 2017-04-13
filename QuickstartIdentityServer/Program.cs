@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 
-namespace IdentityServerWithAspNetIdentitySqlite
+namespace CustomIdentityServer4
 {
     public class Program
     {

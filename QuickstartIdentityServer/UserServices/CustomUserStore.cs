@@ -65,9 +65,10 @@ namespace CustomIdentityServer4.UserServices
         /// <returns></returns>
         public CustomUser FindByExternalProvider(string provider, string userId)
         {
-            return _users.FirstOrDefault(x =>
-                x.ProviderName == provider &&
-                x.ProviderSubjectId == userId);
+            return null;
+                ////_users.FirstOrDefault(x =>
+                ////x.ProviderName == provider &&
+                ////x.ProviderSubjectId == userId);
         }
 
         /// <summary>
@@ -131,8 +132,8 @@ namespace CustomIdentityServer4.UserServices
             {
                 SubjectId = sub,
                 UserName = name,
-                ProviderName = provider,
-                ProviderSubjectId = userId,
+                //ProviderName = provider,
+                //ProviderSubjectId = userId,
                 Claims = filtered
             };
 

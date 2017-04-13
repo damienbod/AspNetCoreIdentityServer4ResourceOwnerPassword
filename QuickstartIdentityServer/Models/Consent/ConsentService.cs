@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
+using IdentityServer4;
 
 namespace CustomIdentityServer4.Models
 {
