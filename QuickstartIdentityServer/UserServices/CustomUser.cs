@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Security.Claims;
-
-namespace CustomIdentityServer4.UserServices
+﻿namespace CustomIdentityServer4.UserServices
 {
     public class CustomUser
     {
