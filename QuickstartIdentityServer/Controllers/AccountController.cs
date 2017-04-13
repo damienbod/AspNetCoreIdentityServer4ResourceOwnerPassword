@@ -17,8 +17,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using CustomIdentityServer4.Filters;
 using CustomIdentityServer4.Models;
-using IdentityServer4.Test;
 using IdentityServer4;
+using CustomIdentityServer4.UserServices;
 
 namespace CustomIdentityServer4.Controllers
 {
@@ -30,7 +30,7 @@ namespace CustomIdentityServer4.Controllers
     [SecurityHeaders]
     public class AccountController : Controller
     {
-        private readonly TestUserStore _users;
+        private readonly CustomUserStore _users;
         private readonly IIdentityServerInteractionService _interaction;
         private readonly AccountService _account;
 
@@ -38,10 +38,10 @@ namespace CustomIdentityServer4.Controllers
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IHttpContextAccessor httpContextAccessor,
-            TestUserStore users = null)
+            CustomUserStore users = null)
         {
             // if the TestUserStore is not in DI, then we'll just use the global users collection
-            _users = users ?? new TestUserStore(TestUsers.Users);
+            _users = users ?? new CustomUserStore(CustomUsers.Users);
             _interaction = interaction;
             _account = new AccountService(interaction, httpContextAccessor, clientStore);
         }
@@ -89,7 +89,7 @@ namespace CustomIdentityServer4.Controllers
 
                     // issue authentication cookie with subject ID and username
                     var user = _users.FindByUsername(model.Username);
-                    await HttpContext.Authentication.SignInAsync(user.SubjectId, user.Username, props);
+                    await HttpContext.Authentication.SignInAsync(user.SubjectId, user.UserName, props);
 
                     // make sure the returnUrl is still valid, and if yes - redirect back to authorize endpoint
                     if (_interaction.IsValidReturnUrl(model.ReturnUrl))
@@ -261,7 +261,7 @@ namespace CustomIdentityServer4.Controllers
             }
 
             // issue authentication cookie for user
-            await HttpContext.Authentication.SignInAsync(user.SubjectId, user.Username,  provider, props, additionalClaims.ToArray());
+            await HttpContext.Authentication.SignInAsync(user.SubjectId, user.UserName,  provider, props, additionalClaims.ToArray());
 
             // delete temporary cookie used during external authentication
             await HttpContext.Authentication.SignOutAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);

@@ -8,16 +8,14 @@ using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
 using IdentityServer4;
 
-namespace CustomIdentityServer4
+namespace CustomIdentityServer4.UserServices
 {
-
-
-    public class IdentityWithAdditionalClaimsProfileService : IProfileService
+    public class CustomProfileService : IProfileService
     {
         private readonly IUserClaimsPrincipalFactory<CustomUser> _claimsFactory;
         private readonly UserManager<CustomUser> _userManager;
 
-        public IdentityWithAdditionalClaimsProfileService(UserManager<CustomUser> userManager,  IUserClaimsPrincipalFactory<CustomUser> claimsFactory)
+        public CustomProfileService(UserManager<CustomUser> userManager,  IUserClaimsPrincipalFactory<CustomUser> claimsFactory)
         {
             _userManager = userManager;
             _claimsFactory = claimsFactory;

@@ -3,16 +3,17 @@
 
 
 using IdentityModel;
+using IdentityServer4;
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace CustomIdentityServer4
+namespace CustomIdentityServer4.UserServices
 {
     public class CustomUsers
     {
         public static List<CustomUser> Users = new List<CustomUser>
         {
-            new CustomUser{SubjectId = "818727", Username = "alice", Password = "alice", 
+            new CustomUser{SubjectId = "818727", UserName = "alice", Password = "alice", Email= "me@email.ch",
                 Claims = 
                 {
                     new Claim(JwtClaimTypes.Name, "Alice Smith"),
@@ -24,7 +25,7 @@ namespace CustomIdentityServer4
                     new Claim(JwtClaimTypes.Address, @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServerConstants.ClaimValueTypes.Json)
                 }
             },
-            new CustomUser{SubjectId = "88421113", Username = "bob", Password = "bob", 
+            new CustomUser{SubjectId = "88421113", UserName = "bob", Password = "bob", Email= "me@email.ch",
                 Claims = 
                 {
                     new Claim(JwtClaimTypes.Name, "Bob Smith"),
