@@ -6,18 +6,18 @@ namespace CustomIdentityServer4.UserServices
 {
     public class CustomResourceOwnerPasswordValidator : IResourceOwnerPasswordValidator
     {
-        private readonly CustomUserStore _users;
+        private readonly IUserRepository _userRepository;
 
-        public CustomResourceOwnerPasswordValidator(CustomUserStore users)
+        public CustomResourceOwnerPasswordValidator(IUserRepository userRepository)
         {
-            _users = users;
+            _userRepository = userRepository;
         }
 
         public Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
-            if (_users.ValidateCredentials(context.UserName, context.Password))
+            if (_userRepository.ValidateCredentials(context.UserName, context.Password))
             {
-                var user = _users.FindByUsername(context.UserName);
+                var user = _userRepository.FindByUsername(context.UserName);
                 context.Result = new GrantValidationResult(user.SubjectId, OidcConstants.AuthenticationMethods.Password);
             }
 

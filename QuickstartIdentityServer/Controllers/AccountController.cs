@@ -32,17 +32,17 @@ namespace CustomIdentityServer4.Controllers
     {
         private readonly IIdentityServerInteractionService _interaction;
         private readonly AccountService _account;
-        private readonly CustomUserStore _customUserStore;
+        private readonly IUserRepository _userRepository;
 
         public AccountController(
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IHttpContextAccessor httpContextAccessor,
-            CustomUserStore customUserStore)
+            IUserRepository userRepository)
         {
             _interaction = interaction;
             _account = new AccountService(interaction, httpContextAccessor, clientStore);
-            _customUserStore = customUserStore;
+            _userRepository = userRepository;
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace CustomIdentityServer4.Controllers
             if (ModelState.IsValid)
             {
                 // validate username/password against in-memory store
-                if (_customUserStore.ValidateCredentials(model.Username, model.Password))
+                if (_userRepository.ValidateCredentials(model.Username, model.Password))
                 {
                     AuthenticationProperties props = null;
                     // only set explicit expiration here if persistent. 
@@ -87,7 +87,7 @@ namespace CustomIdentityServer4.Controllers
                     };
 
                     // issue authentication cookie with subject ID and username
-                    var user = _customUserStore.FindByUsername(model.Username);
+                    var user = _userRepository.FindByUsername(model.Username);
                     await HttpContext.Authentication.SignInAsync(user.SubjectId, user.UserName, props);
 
                     // make sure the returnUrl is still valid, and if yes - redirect back to authorize endpoint

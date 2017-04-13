@@ -13,11 +13,11 @@ namespace CustomIdentityServer4.UserServices
         protected readonly ILogger Logger;
 
 
-        protected readonly CustomUserStore Users;
+        protected readonly IUserRepository _userRepository;
 
-        public CustomProfileService(CustomUserStore users, ILogger<CustomProfileService> logger)
+        public CustomProfileService(IUserRepository userRepository, ILogger<CustomProfileService> logger)
         {
-            Users = users;
+            _userRepository = userRepository;
             Logger = logger;
         }
 
@@ -32,7 +32,7 @@ namespace CustomIdentityServer4.UserServices
                 context.RequestedClaimTypes,
                 context.Caller);
 
-            var user = Users.FindBySubjectId(context.Subject.GetSubjectId());
+            var user = _userRepository.FindBySubjectId(context.Subject.GetSubjectId());
 
             var claims = new List<Claim>
             {
@@ -48,7 +48,7 @@ namespace CustomIdentityServer4.UserServices
         public async Task IsActiveAsync(IsActiveContext context)
         {
             var sub = context.Subject.GetSubjectId();
-            var user = Users.FindBySubjectId(context.Subject.GetSubjectId());
+            var user = _userRepository.FindBySubjectId(context.Subject.GetSubjectId());
             context.IsActive = user != null;
         }
     }

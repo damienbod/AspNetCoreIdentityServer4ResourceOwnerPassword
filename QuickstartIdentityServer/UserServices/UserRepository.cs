@@ -4,7 +4,7 @@ using System;
 
 namespace CustomIdentityServer4.UserServices
 {
-    public class CustomUserStore
+    public class UserRepository : IUserRepository
     {
         // some dummy data. Replce this with your user persistence. 
         private readonly List<CustomUser> _users = new List<CustomUser>
