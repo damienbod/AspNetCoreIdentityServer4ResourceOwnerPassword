@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using Newtonsoft.Json.Serialization;
 using Microsoft.IdentityModel.Tokens;
+using IdentityServer4.AccessTokenValidation;
+using System.Collections.Generic;
 
 namespace AspNetCoreResourceServer
 {
@@ -93,19 +95,20 @@ namespace AspNetCoreResourceServer
             app.UseStaticFiles();
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
-
-            app.UseJwtBearerAuthentication(new JwtBearerOptions
+            IdentityServerAuthenticationOptions identityServerValidationOptions = new IdentityServerAuthenticationOptions
             {
                 Authority = "https://localhost:44318/",
-                Audience = "dataEventRecords",
-                RequireHttpsMetadata = true,
-                TokenValidationParameters = new TokenValidationParameters
-                {
-                    NameClaimType = OpenIdConnectConstants.Claims.Subject,
-                    RoleClaimType = OpenIdConnectConstants.Claims.Role
-                }
-            });
+                AllowedScopes = new List<string> { "dataEventRecords" },
+                ApiSecret = "dataEventRecordsSecret",
+                ApiName = "dataEventRecords",
+                AutomaticAuthenticate = true,
+                SupportedTokens = SupportedTokens.Both,
+                // TokenRetriever = _tokenRetriever,
+                // required if you want to return a 403 and not a 401 for forbidden responses
+                AutomaticChallenge = true,
+            };
+
+            app.UseIdentityServerAuthentication(identityServerValidationOptions);
 
             app.UseMvc(routes =>
             {
