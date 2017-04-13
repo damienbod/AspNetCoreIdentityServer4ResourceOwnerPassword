@@ -38,7 +38,8 @@ namespace CustomIdentityServer4
                 .AddSigningCredential(cert)
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetApiResources())
-                .AddInMemoryClients(Config.GetClients()).AddCustomUsers(CustomUsers.Users);
+                .AddInMemoryClients(Config.GetClients())
+                .AddCustomUserStore();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

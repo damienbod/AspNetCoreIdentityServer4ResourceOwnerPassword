@@ -30,20 +30,19 @@ namespace CustomIdentityServer4.Controllers
     [SecurityHeaders]
     public class AccountController : Controller
     {
-        private readonly CustomUserStore _users;
         private readonly IIdentityServerInteractionService _interaction;
         private readonly AccountService _account;
+        private readonly CustomUserStore _customUserStore;
 
         public AccountController(
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IHttpContextAccessor httpContextAccessor,
-            CustomUserStore users = null)
+            CustomUserStore customUserStore)
         {
-            // if the TestUserStore is not in DI, then we'll just use the global users collection
-            _users = users ?? new CustomUserStore(CustomUsers.Users);
             _interaction = interaction;
             _account = new AccountService(interaction, httpContextAccessor, clientStore);
+            _customUserStore = customUserStore;
         }
 
         /// <summary>
@@ -73,7 +72,7 @@ namespace CustomIdentityServer4.Controllers
             if (ModelState.IsValid)
             {
                 // validate username/password against in-memory store
-                if (_users.ValidateCredentials(model.Username, model.Password))
+                if (_customUserStore.ValidateCredentials(model.Username, model.Password))
                 {
                     AuthenticationProperties props = null;
                     // only set explicit expiration here if persistent. 
@@ -88,7 +87,7 @@ namespace CustomIdentityServer4.Controllers
                     };
 
                     // issue authentication cookie with subject ID and username
-                    var user = _users.FindByUsername(model.Username);
+                    var user = _customUserStore.FindByUsername(model.Username);
                     await HttpContext.Authentication.SignInAsync(user.SubjectId, user.UserName, props);
 
                     // make sure the returnUrl is still valid, and if yes - redirect back to authorize endpoint
@@ -196,83 +195,6 @@ namespace CustomIdentityServer4.Controllers
                 };
                 return new ChallengeResult(provider, props);
             }
-        }
-
-        /// <summary>
-        /// Post processing of external authentication
-        /// </summary>
-        [HttpGet]
-        public async Task<IActionResult> ExternalLoginCallback(string returnUrl)
-        {
-            // read external identity from the temporary cookie
-            var info = await HttpContext.Authentication.GetAuthenticateInfoAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
-            var tempUser = info?.Principal;
-            if (tempUser == null)
-            {
-                throw new Exception("External authentication error");
-            }
-
-            // retrieve claims of the external user
-            var claims = tempUser.Claims.ToList();
-
-            // try to determine the unique id of the external user - the most common claim type for that are the sub claim and the NameIdentifier
-            // depending on the external provider, some other claim type might be used
-            var userIdClaim = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Subject);
-            if (userIdClaim == null)
-            {
-                userIdClaim = claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-            }
-            if (userIdClaim == null)
-            {
-                throw new Exception("Unknown userid");
-            }
-
-            // remove the user id claim from the claims collection and move to the userId property
-            // also set the name of the external authentication provider
-            claims.Remove(userIdClaim);
-            var provider = info.Properties.Items["scheme"];
-            var userId = userIdClaim.Value;
-
-            // check if the external user is already provisioned
-            var user = _users.FindByExternalProvider(provider, userId);
-            if (user == null)
-            {
-                // this sample simply auto-provisions new external user
-                // another common approach is to start a registrations workflow first
-                user = _users.AutoProvisionUser(provider, userId, claims);
-            }
-
-            var additionalClaims = new List<Claim>();
-
-            // if the external system sent a session id claim, copy it over
-            var sid = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.SessionId);
-            if (sid != null)
-            {
-                additionalClaims.Add(new Claim(JwtClaimTypes.SessionId, sid.Value));
-            }
-
-            // if the external provider issued an id_token, we'll keep it for signout
-            AuthenticationProperties props = null;
-            var id_token = info.Properties.GetTokenValue("id_token");
-            if (id_token != null)
-            {
-                props = new AuthenticationProperties();
-                props.StoreTokens(new[] { new AuthenticationToken { Name = "id_token", Value = id_token } });
-            }
-
-            // issue authentication cookie for user
-            await HttpContext.Authentication.SignInAsync(user.SubjectId, user.UserName,  provider, props, additionalClaims.ToArray());
-
-            // delete temporary cookie used during external authentication
-            await HttpContext.Authentication.SignOutAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
-
-            // validate return URL and redirect back to authorization endpoint
-            if (_interaction.IsValidReturnUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-
-            return Redirect("~/");
         }
     }
 }

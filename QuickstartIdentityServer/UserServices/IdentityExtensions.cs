@@ -5,9 +5,9 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class CustomIdentityServerBuilderExtensions
     {
-        public static IIdentityServerBuilder AddCustomUsers(this IIdentityServerBuilder builder, List<CustomUser> users)
+        public static IIdentityServerBuilder AddCustomUserStore(this IIdentityServerBuilder builder)
         {
-            builder.Services.AddSingleton(new CustomUserStore(users));
+            builder.Services.AddSingleton(new CustomUserStore());
             builder.AddProfileService<CustomProfileService>();
             builder.AddResourceOwnerValidator<CustomResourceOwnerPasswordValidator>();
 
