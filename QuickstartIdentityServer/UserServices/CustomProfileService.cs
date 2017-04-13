@@ -5,63 +5,53 @@ using IdentityModel;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
-using Microsoft.AspNetCore.Identity;
 using IdentityServer4;
+using Microsoft.Extensions.Logging;
 
 namespace CustomIdentityServer4.UserServices
 {
     public class CustomProfileService : IProfileService
     {
-        private readonly IUserClaimsPrincipalFactory<CustomUser> _claimsFactory;
-        private readonly UserManager<CustomUser> _userManager;
+        protected readonly ILogger Logger;
 
-        public CustomProfileService(UserManager<CustomUser> userManager,  IUserClaimsPrincipalFactory<CustomUser> claimsFactory)
+
+        protected readonly CustomUserStore Users;
+
+        public CustomProfileService(CustomUserStore users, ILogger<CustomProfileService> logger)
         {
-            _userManager = userManager;
-            _claimsFactory = claimsFactory;
+            Users = users;
+            Logger = logger;
         }
+
 
         public async Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
             var sub = context.Subject.GetSubjectId();
 
-            var user = await _userManager.FindByIdAsync(sub);
-            var principal = await _claimsFactory.CreateAsync(user);
+            Logger.LogDebug("Get profile called for subject {subject} from client {client} with claim types {claimTypes} via {caller}",
+                context.Subject.GetSubjectId(),
+                context.Client.ClientName ?? context.Client.ClientId,
+                context.RequestedClaimTypes,
+                context.Caller);
 
-            var claims = principal.Claims.ToList();
+            var user = Users.FindBySubjectId(context.Subject.GetSubjectId());
 
-            claims = claims.Where(claim => context.RequestedClaimTypes.Contains(claim.Type)).ToList();
-            
-
-            claims.Add(new Claim(JwtClaimTypes.GivenName, user.UserName));
-            //new Claim(JwtClaimTypes.Role, "admin"),
-            //new Claim(JwtClaimTypes.Role, "dataEventRecords.admin"),
-            //new Claim(JwtClaimTypes.Role, "dataEventRecords.user"),
-            //new Claim(JwtClaimTypes.Role, "dataEventRecords"),
-            //new Claim(JwtClaimTypes.Role, "securedFiles.user"),
-            //new Claim(JwtClaimTypes.Role, "securedFiles.admin"),
-            //new Claim(JwtClaimTypes.Role, "securedFiles")
-
-            //if (user.IsAdmin)
-            //{
-            //    claims.Add(new Claim(JwtClaimTypes.Role, "admin"));
-            //}
-            //else
-            //{
-            //    claims.Add(new Claim(JwtClaimTypes.Role, "user"));
+            //if (context.RequestedClaimTypes.Any())
+            //{            
+            //    context.AddFilteredClaims(user.Claims);
             //}
 
 
-            claims.Add(new Claim(IdentityServerConstants.StandardScopes.Email, user.Email));
+            //claims.Add(new Claim(IdentityServerConstants.StandardScopes.Email, user.Email));
 
 
-            context.IssuedClaims = claims;
+            context.IssuedClaims = user.Claims.ToList();
         }
 
         public async Task IsActiveAsync(IsActiveContext context)
         {
             var sub = context.Subject.GetSubjectId();
-            var user = await _userManager.FindByIdAsync(sub);
+            var user = Users.FindBySubjectId(context.Subject.GetSubjectId());
             context.IsActive = user != null;
         }
     }
