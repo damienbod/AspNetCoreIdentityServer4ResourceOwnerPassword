@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCoreResourceServer", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleResourceOwnerFlowRefreshToken", "ConsoleResourceOwnerFlowRefreshToken\ConsoleResourceOwnerFlowRefreshToken.csproj", "{75B4202A-ADD0-4801-A4EC-22F362A35125}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomIdentityServer4", "QuickstartIdentityServer\CustomIdentityServer4.csproj", "{88FD3314-27CB-4E5D-A7D8-C41C096911A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomIdentityServer4", "IdentityServer4WithCustomUserRepository\CustomIdentityServer4.csproj", "{88FD3314-27CB-4E5D-A7D8-C41C096911A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
