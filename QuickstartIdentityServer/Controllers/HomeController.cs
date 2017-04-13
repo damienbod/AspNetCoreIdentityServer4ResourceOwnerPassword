@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using CustomIdentityServer4.Filters;
 using IdentityServer4.Services;
-using IdentityServer4.Quickstart.UI.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using CustomIdentityServer4.Models;
 
-namespace IdentityServerWithAspNetIdentity.Controllers
+namespace CustomIdentityServer4.Controllers
 {
+    [SecurityHeaders]
     public class HomeController : Controller
     {
         private readonly IIdentityServerInteractionService _interaction;
@@ -19,20 +18,6 @@ namespace IdentityServerWithAspNetIdentity.Controllers
 
         public IActionResult Index()
         {
-            return View();
-        }
-
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
             return View();
         }
 

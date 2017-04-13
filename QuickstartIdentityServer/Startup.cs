@@ -1,19 +1,15 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using IdentityServerWithAspNetIdentity.Data;
-using IdentityServerWithAspNetIdentity.Models;
-using IdentityServerWithAspNetIdentity.Services;
 using QuickstartIdentityServer;
 using IdentityServer4.Services;
 using System.Security.Cryptography.X509Certificates;
 using System.IO;
 
-namespace IdentityServerWithAspNetIdentitySqlite
+namespace CustomIdentityServer4
 {
     public class Startup
     {
@@ -38,26 +34,18 @@ namespace IdentityServerWithAspNetIdentitySqlite
         {
             var cert = new X509Certificate2(Path.Combine(_environment.ContentRootPath, "damienbodserver.pfx"), "");
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders();
 
             services.AddMvc();
 
             services.AddTransient<IProfileService, IdentityWithAdditionalClaimsProfileService>();
 
-            services.AddTransient<IEmailSender, AuthMessageSender>();
-            services.AddTransient<ISmsSender, AuthMessageSender>();
 
             services.AddIdentityServer()
                 .AddSigningCredential(cert)
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetApiResources())
-                .AddInMemoryClients(Config.GetClients())
-                .AddAspNetIdentity<ApplicationUser>()
+                .AddInMemoryClients(Config.GetClients()).AddTestUsers(CustomUsers.Users)
                 .AddProfileService<IdentityWithAdditionalClaimsProfileService>();
         }
 
