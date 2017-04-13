@@ -56,8 +56,8 @@ namespace QuickstartIdentityServer
 
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
                     AccessTokenType = AccessTokenType.Jwt,
-                    AccessTokenLifetime = 86400,
-                    IdentityTokenLifetime = 86400,
+                    AccessTokenLifetime = 120, //86400,
+                    IdentityTokenLifetime = 120, //86400,
                     UpdateAccessTokenClaimsOnRefresh = true,
                     SlidingRefreshTokenLifetime = 30,
                     AllowOfflineAccess = true,
