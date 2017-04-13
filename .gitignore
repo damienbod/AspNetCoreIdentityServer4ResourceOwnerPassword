@@ -1,0 +1,11 @@
+AspNetCoreResourceServer/bin
+AspNetCoreResourceServer/obj
+ConsoleResourceOwnerFlowRefreshToken/obj
+QuickstartIdentityServer/wwwroot
+QuickstartIdentityServer/bin
+QuickstartIdentityServer/obj
+.vs
+ConsoleResourceOwnerFlowRefreshToken/bin
+ConsoleResourceOwnerFlowRefreshToken/bin
+ConsoleResourceOwnerFlowRefreshToken/bin
+ConsoleResourceOwnerFlowRefreshToken/bin/Debug/netcoreapp1.1/ConsoleResourceOwnerFlowRefreshToken.pdb
