@@ -100,7 +100,7 @@ namespace AspNetCoreResourceServer
 
             app.UseJwtBearerAuthentication(new JwtBearerOptions
             {
-                Authority = "https://localhost:44319/",
+                Authority = "https://localhost:44318/",
                 Audience = "dataEventRecords",
                 RequireHttpsMetadata = true,
                 TokenValidationParameters = new TokenValidationParameters
