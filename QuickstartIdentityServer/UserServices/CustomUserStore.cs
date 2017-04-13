@@ -132,9 +132,6 @@ namespace CustomIdentityServer4.UserServices
             {
                 SubjectId = sub,
                 UserName = name,
-                //ProviderName = provider,
-                //ProviderSubjectId = userId,
-                Claims = filtered
             };
 
             // add user to in-memory store

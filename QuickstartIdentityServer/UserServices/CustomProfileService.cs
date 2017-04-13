@@ -7,6 +7,7 @@ using IdentityServer4.Models;
 using IdentityServer4.Services;
 using IdentityServer4;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace CustomIdentityServer4.UserServices
 {
@@ -36,17 +37,15 @@ namespace CustomIdentityServer4.UserServices
 
             var user = Users.FindBySubjectId(context.Subject.GetSubjectId());
 
-            //if (context.RequestedClaimTypes.Any())
-            //{            
-            //    context.AddFilteredClaims(user.Claims);
-            //}
+            var claims = new List<Claim>
+            {
+                new Claim("role", "dataEventRecords.admin"),
+                new Claim("role", "dataEventRecords.user"),
+                new Claim("username", user.UserName),
+                new Claim("email", user.Email)
+            };
 
-
-            user.Claims.Add(new Claim("role", "dataEventRecords.admin"));
-            user.Claims.Add(new Claim("role", "dataEventRecords.user"));
-            user.Claims.Add(new Claim("username", user.UserName));
-
-            context.IssuedClaims = user.Claims.ToList();
+            context.IssuedClaims = claims;
         }
 
         public async Task IsActiveAsync(IsActiveContext context)

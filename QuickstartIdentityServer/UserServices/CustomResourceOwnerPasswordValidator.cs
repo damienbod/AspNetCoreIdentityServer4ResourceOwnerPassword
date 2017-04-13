@@ -27,7 +27,7 @@ namespace CustomIdentityServer4.UserServices
             if (_users.ValidateCredentials(context.UserName, context.Password))
             {
                 var user = _users.FindByUsername(context.UserName);
-                context.Result = new GrantValidationResult(user.SubjectId, OidcConstants.AuthenticationMethods.Password, user.Claims);
+                context.Result = new GrantValidationResult(user.SubjectId, OidcConstants.AuthenticationMethods.Password);
             }
 
             return Task.FromResult(0);

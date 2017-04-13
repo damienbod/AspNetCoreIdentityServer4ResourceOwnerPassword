@@ -67,8 +67,8 @@ namespace ConsoleResourceOwnerFlowRefreshToken
         static async Task<TokenResponse> RequestTokenAsync()
         {
             return await _tokenClient.RequestResourceOwnerPasswordAsync(
-                "bob",
-                "bob",
+                "damienbod",
+                "damienbod",
                 "email openid dataEventRecords offline_access");
         }
 
