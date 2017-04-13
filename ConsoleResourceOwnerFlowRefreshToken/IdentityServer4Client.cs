@@ -28,21 +28,24 @@ namespace ConsoleResourceOwnerFlowRefreshToken
             return await RequestTokenAsync(user, password);
         }
 
-        public static async Task RunRefreshAsync(TokenResponse response)
+        public static async Task RunRefreshAsync(TokenResponse response, int milliseconds)
         {
             var refresh_token = response.RefreshToken;
 
             while (true)
             {
                 response = await RefreshTokenAsync(refresh_token);
-                ShowResponse(response);
 
-                await CallServiceAsync(response.AccessToken);
+                // Get the resource data using the new tokens...
+                await ResourceDataClient.GetDataAndDisplayInConsoleAsync(response.AccessToken);
 
                 if (response.RefreshToken != refresh_token)
                 {
+                    ShowResponse(response);
                     refresh_token = response.RefreshToken;
                 }
+
+                Task.Delay(milliseconds).Wait();
             }
         }
         private static async Task<TokenResponse> RequestTokenAsync(string user, string password)
@@ -58,22 +61,6 @@ namespace ConsoleResourceOwnerFlowRefreshToken
             Console.WriteLine("Using refresh token: {0}", refreshToken);
 
             return await _tokenClient.RequestRefreshTokenAsync(refreshToken);
-        }
-
-        private static async Task CallServiceAsync(string token)
-        {
-            var baseAddress = "https://localhost:44318/";
-
-            var client = new HttpClient
-            {
-                BaseAddress = new Uri(baseAddress)
-            };
-
-            client.SetBearerToken(token);
-            var response = await client.GetStringAsync("https://localhost:44318/identity");
-
-            Console.WriteLine("\n\nService claims:");
-            Console.WriteLine(JArray.Parse(response));
         }
 
         private static void ShowResponse(TokenResponse response)

@@ -24,8 +24,8 @@ namespace ConsoleResourceOwnerFlowRefreshToken
 
             Console.WriteLine($"GOT DATA FROM THE RESOURCE SERVER");
 
-            // Run an loop which gets refreshes the token
-            await IdentityServer4Client.RunRefreshAsync(response);
+            // Run an loop which gets refreshes the token every 3000 milliseconds
+            await IdentityServer4Client.RunRefreshAsync(response, 3000);
         }
     }
 }
