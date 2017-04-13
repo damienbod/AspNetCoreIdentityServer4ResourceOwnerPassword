@@ -20,7 +20,6 @@ namespace CustomIdentityServer4.UserServices
                 Email = "me@email.ch",
                 Claims = new List<Claim>
                 {
-                    new Claim(JwtClaimTypes.Name, "Alice Smith"),
                     new Claim(JwtClaimTypes.GivenName, "Alice"),
                     new Claim(JwtClaimTypes.FamilyName, "Smith"),
                     new Claim(JwtClaimTypes.Email, "AliceSmith@email.com"),
@@ -36,7 +35,6 @@ namespace CustomIdentityServer4.UserServices
                 Email = "me@email.ch",
                 Claims = new List<Claim>
                 {
-                    new Claim(JwtClaimTypes.Name, "Bob Smith"),
                     new Claim(JwtClaimTypes.GivenName, "Bob"),
                     new Claim(JwtClaimTypes.FamilyName, "Smith"),
                     new Claim(JwtClaimTypes.Email, "BobSmith@email.com"),

@@ -44,6 +44,7 @@ namespace CustomIdentityServer4.UserServices
 
             user.Claims.Add(new Claim("role", "dataEventRecords.admin"));
             user.Claims.Add(new Claim("role", "dataEventRecords.user"));
+            user.Claims.Add(new Claim("username", user.UserName));
 
             context.IssuedClaims = user.Claims.ToList();
         }

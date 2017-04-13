@@ -21,6 +21,7 @@ namespace AspNet5SQLite.Controllers
         [HttpGet]
         public IActionResult Get()
         {
+            var userName = HttpContext.User.FindFirst("username")?.Value;
             return Ok(_dataEventRecordRepository.GetAll());
         }
 

@@ -29,10 +29,26 @@ namespace ConsoleResourceOwnerFlowRefreshToken
             var response = await RequestTokenAsync();
             //response.Show();
 
-            Console.ReadLine();
-
+            Console.WriteLine($"got the token: {response.AccessToken}");
+            
             var refresh_token = response.RefreshToken;
 
+            // GET DATA from the resource server
+            HttpClient httpClient = new HttpClient();
+            httpClient.SetBearerToken(response.AccessToken);
+
+            var payloadFromResourceServer = await httpClient.GetAsync("https://localhost:44365/api/DataEventRecords");
+            if (!payloadFromResourceServer.IsSuccessStatusCode)
+            {
+                Console.WriteLine(payloadFromResourceServer.StatusCode);
+            }
+            else
+            {
+                var content = await payloadFromResourceServer.Content.ReadAsStringAsync();
+                Console.WriteLine(JArray.Parse(content));
+            }
+
+         
             while (true)
             {
                 response = await RefreshTokenAsync(refresh_token);
