@@ -53,21 +53,30 @@ namespace QuickstartIdentityServer
                 new Client
                 {
                     ClientId = "resourceownerclient",
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword, 
-                    AllowAccessTokensViaBrowser = true,
-                    RequireClientSecret = false,
-                    ClientSecrets=  new List<Secret> { new Secret("dataEventRecordsSecret".Sha256()) },
-                    AccessTokenLifetime = 900,
 
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
+                    AccessTokenType = AccessTokenType.Jwt,
+                    AccessTokenLifetime = 86400,
+                    IdentityTokenLifetime = 86400,
+                    UpdateAccessTokenClaimsOnRefresh = true,
+                    SlidingRefreshTokenLifetime = 30,
+                    AllowOfflineAccess = true,
+                    RefreshTokenExpiration = TokenExpiration.Absolute,
+                    RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                    AlwaysSendClientClaims = true,
+                    Enabled = true,
+                    
+                   // AllowAccessTokensViaBrowser = true,
+                    ClientSecrets=  new List<Secret> { new Secret("dataEventRecordsSecret".Sha256()) },
                     AllowedScopes = {
                         IdentityServerConstants.StandardScopes.OpenId, 
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Email,
+                        IdentityServerConstants.StandardScopes.OfflineAccess,
                         "dataEventRecords"
-                    },
-                    AllowOfflineAccess = true 
+                    }
                 }
-};
+            };
         }
     }
 }
