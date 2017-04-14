@@ -56,8 +56,8 @@ namespace QuickstartIdentityServer
 
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
                     AccessTokenType = AccessTokenType.Jwt,
-                    AccessTokenLifetime = 120, //86400,
-                    IdentityTokenLifetime = 120, //86400,
+                    AccessTokenLifetime = 3600,
+                    IdentityTokenLifetime = 3600,
                     UpdateAccessTokenClaimsOnRefresh = true,
                     SlidingRefreshTokenLifetime = 30,
                     AllowOfflineAccess = true,
@@ -65,8 +65,6 @@ namespace QuickstartIdentityServer
                     RefreshTokenUsage = TokenUsage.OneTimeOnly,
                     AlwaysSendClientClaims = true,
                     Enabled = true,
-                    
-                   // AllowAccessTokensViaBrowser = true,
                     ClientSecrets=  new List<Secret> { new Secret("dataEventRecordsSecret".Sha256()) },
                     AllowedScopes = {
                         IdentityServerConstants.StandardScopes.OpenId, 

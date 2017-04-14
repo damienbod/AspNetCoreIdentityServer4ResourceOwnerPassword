@@ -1,5 +1,4 @@
 ﻿using CustomIdentityServer4.UserServices;
-using System.Collections.Generic;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
