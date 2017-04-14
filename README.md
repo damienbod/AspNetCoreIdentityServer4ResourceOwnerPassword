@@ -1,5 +1,7 @@
 # ASP.NET Core IdentityServer4 ResourceOwnerPassword with custom UserRepository
 
+https://damienbod.com/2017/04/14/asp-net-core-identityserver4-resource-owner-password-flow-with-custom-userrepository/
+
 
 |                           | Build                                                                                                                                                                          |       
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
