@@ -20,8 +20,8 @@ namespace CustomIdentityServer4
                 .MinimumLevel.Verbose()
                 .Enrich.WithProperty("App", "CustomIdentityServer4")
                 .Enrich.FromLogContext()
-               // .WriteTo.Seq("http://localhost:5341")
-                .WriteTo.RollingFile("../Log/CustomIdentityServer4")
+                .WriteTo.Seq("http://localhost:5341")
+                //.WriteTo.RollingFile("../Log/CustomIdentityServer4")
                 .CreateLogger();
 
             var builder = new ConfigurationBuilder()

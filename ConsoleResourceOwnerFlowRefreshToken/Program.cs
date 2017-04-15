@@ -14,9 +14,9 @@ namespace ConsoleResourceOwnerFlowRefreshToken
               .MinimumLevel.Verbose()
               .Enrich.WithProperty("App", "ConsoleResourceOwnerFlowRefreshToken")
               .Enrich.FromLogContext()
-             // .WriteTo.Seq("http://localhost:5341")
+              .WriteTo.Seq("http://localhost:5341")
               .WriteTo.ColoredConsole()
-              .WriteTo.RollingFile("../Log/ConsoleResourceOwnerFlowRefreshToken")
+              //.WriteTo.RollingFile("../Log/ConsoleResourceOwnerFlowRefreshToken")
               .CreateLogger();
 
             var response = IdentityServer4Client.LoginAsync("damienbod", "damienbod").Result;

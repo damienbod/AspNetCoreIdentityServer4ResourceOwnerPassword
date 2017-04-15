@@ -30,8 +30,8 @@ namespace AspNetCoreResourceServer
                 .MinimumLevel.Verbose()
                 .Enrich.WithProperty("App", "AspNetCoreResourceServer")
                 .Enrich.FromLogContext()
-                //.WriteTo.Seq("http://localhost:5341")
-                .WriteTo.RollingFile("../Log/AspNetCoreResourceServer")
+                .WriteTo.Seq("http://localhost:5341")
+                //.WriteTo.RollingFile("../Log/AspNetCoreResourceServer")
                 .CreateLogger();
 
             _env = env;
