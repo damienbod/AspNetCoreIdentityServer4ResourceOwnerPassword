@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using QuickstartIdentityServer;
 using System.Security.Cryptography.X509Certificates;
 using System.IO;
-using CustomIdentityServer4.UserServices;
+using Serilog;
 
 namespace CustomIdentityServer4
 {
@@ -16,6 +16,12 @@ namespace CustomIdentityServer4
 
         public Startup(IHostingEnvironment env)
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .Enrich.FromLogContext()
+                .WriteTo.Seq("http://localhost:5341")
+                .CreateLogger();
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -46,6 +52,9 @@ namespace CustomIdentityServer4
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            // Add Serilog to the logging pipeline
+            loggerFactory.AddSerilog();
 
             if (env.IsDevelopment())
             {
