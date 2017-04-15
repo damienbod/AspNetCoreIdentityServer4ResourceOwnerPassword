@@ -1,5 +1,5 @@
-using AspNet5SQLite.Model;
-using AspNet5SQLite.Repositories;
+using AspNetCoreResourceServer.Model;
+using AspNetCoreResourceServer.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -12,9 +12,9 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using Newtonsoft.Json.Serialization;
-using Microsoft.IdentityModel.Tokens;
 using IdentityServer4.AccessTokenValidation;
 using System.Collections.Generic;
+using Serilog;
 
 namespace AspNetCoreResourceServer
 {
@@ -26,6 +26,14 @@ namespace AspNetCoreResourceServer
 
         public Startup(IHostingEnvironment env)
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .Enrich.WithProperty("App", "AspNetCoreResourceServer")
+                .Enrich.FromLogContext()
+                //.WriteTo.Seq("http://localhost:5341")
+                .WriteTo.RollingFile("../Log/AspNetCoreResourceServer")
+                .CreateLogger();
+
             _env = env;
             var builder = new ConfigurationBuilder()
                  .SetBasePath(env.ContentRootPath)
@@ -89,6 +97,9 @@ namespace AspNetCoreResourceServer
         {
             loggerFactory.AddConsole();
             loggerFactory.AddDebug();
+
+            // Add Serilog to the logging pipeline
+            loggerFactory.AddSerilog();
 
             app.UseExceptionHandler("/Home/Error");
             app.UseCors("corsGlobalPolicy");

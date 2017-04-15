@@ -1,9 +1,8 @@
-﻿
-using IdentityModel;
+﻿using IdentityModel;
 using IdentityModel.Client;
 using Newtonsoft.Json.Linq;
+using Serilog;
 using System;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,6 +49,7 @@ namespace ConsoleResourceOwnerFlowRefreshToken
         }
         private static async Task<TokenResponse> RequestTokenAsync(string user, string password)
         {
+            Log.Logger.Verbose("begin RequestTokenAsync");
             return await _tokenClient.RequestResourceOwnerPasswordAsync(
                 user,
                 password,
@@ -58,7 +58,7 @@ namespace ConsoleResourceOwnerFlowRefreshToken
 
         private static async Task<TokenResponse> RefreshTokenAsync(string refreshToken)
         {
-            Console.WriteLine("Using refresh token: {0}", refreshToken);
+            Log.Logger.Verbose("Using refresh token: {RefreshToken}", refreshToken);
 
             return await _tokenClient.RequestRefreshTokenAsync(refreshToken);
         }
@@ -67,34 +67,28 @@ namespace ConsoleResourceOwnerFlowRefreshToken
         {
             if (!response.IsError)
             {
-                Console.WriteLine("Token response:");
-                Console.WriteLine(response.Json);
+                Log.Logger.Debug("Token response: {TokenPayload}", response.Json.ToString());
 
                 if (response.AccessToken.Contains("."))
                 {
-                    Console.WriteLine("\nAccess Token (decoded):");
-
                     var parts = response.AccessToken.Split('.');
                     var header = parts[0];
                     var claims = parts[1];
 
-                    Console.WriteLine(JObject.Parse(Encoding.UTF8.GetString(Base64Url.Decode(header))));
-                    Console.WriteLine(JObject.Parse(Encoding.UTF8.GetString(Base64Url.Decode(claims))));
+                    Log.Logger.Debug("Access Token Header decoded {AccessHeader}", JObject.Parse(Encoding.UTF8.GetString(Base64Url.Decode(header))).ToString());
+                    Log.Logger.Debug("Access Token claims decoded {Claims}", JObject.Parse(Encoding.UTF8.GetString(Base64Url.Decode(claims))).ToString());
                 }
             }
             else
             {
                 if (response.ErrorType == ResponseErrorType.Http)
                 {
-                    Console.WriteLine("HTTP error: ");
-                    Console.WriteLine(response.Error);
-                    Console.WriteLine("HTTP status code: ");
-                    Console.WriteLine(response.HttpStatusCode);
+                    Log.Logger.Warning("HTTP error:  {ResponseError}", response.Error);
+                    Log.Logger.Warning("HTTP status code:  {ResponseHttpStatusCode}", response.HttpStatusCode);
                 }
                 else
                 {
-                    Console.WriteLine("Protocol error response:");
-                    Console.WriteLine(response.Json);
+                    Log.Logger.Warning("Protocol error response: {ResponsePayload}", response.Json);
                 }
             }
         }

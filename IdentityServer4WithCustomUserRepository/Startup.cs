@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using QuickstartIdentityServer;
 using System.Security.Cryptography.X509Certificates;
 using System.IO;
-using CustomIdentityServer4.UserServices;
+using Serilog;
 
 namespace CustomIdentityServer4
 {
@@ -16,6 +16,14 @@ namespace CustomIdentityServer4
 
         public Startup(IHostingEnvironment env)
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .Enrich.WithProperty("App", "CustomIdentityServer4")
+                .Enrich.FromLogContext()
+               // .WriteTo.Seq("http://localhost:5341")
+                .WriteTo.RollingFile("../Log/CustomIdentityServer4")
+                .CreateLogger();
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -34,7 +42,12 @@ namespace CustomIdentityServer4
             var cert = new X509Certificate2(Path.Combine(_environment.ContentRootPath, "damienbodserver.pfx"), "");
 
             services.AddMvc();
-            services.AddIdentityServer()
+            services.AddIdentityServer(options =>
+                {
+                    options.Events.RaiseSuccessEvents = true;
+                    options.Events.RaiseFailureEvents = true;
+                    options.Events.RaiseErrorEvents = true;
+                })
                 .AddSigningCredential(cert)
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetApiResources())
@@ -46,6 +59,9 @@ namespace CustomIdentityServer4
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            // Add Serilog to the logging pipeline
+            loggerFactory.AddSerilog();
 
             if (env.IsDevelopment())
             {

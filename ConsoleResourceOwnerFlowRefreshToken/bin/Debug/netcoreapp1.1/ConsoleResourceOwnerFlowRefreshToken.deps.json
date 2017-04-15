@@ -1,14 +1,17 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v1.1",
-    "signature": "44549bef9a3dfc05068a22f966d1b5d102b30cb3"
+    "signature": "ff674336a319cd5a3e98615e496c3e3744b688fe"
   },
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v1.1": {
       "consoleresourceownerflowrefreshtoken/1.0.0": {
         "dependencies": {
-          "IdentityModel": "2.7.0"
+          "IdentityModel": "2.7.0",
+          "Serilog": "2.4.0",
+          "Serilog.Sinks.ColoredConsole": "2.0.0",
+          "Serilog.Sinks.Seq": "3.2.0"
         },
         "runtime": {
           "ConsoleResourceOwnerFlowRefreshToken.dll": {}
@@ -29,6 +32,72 @@
         },
         "runtime": {
           "lib/netstandard1.0/Newtonsoft.Json.dll": {}
+        }
+      },
+      "serilog/2.4.0": {
+        "dependencies": {
+          "System.Collections.NonGeneric": "4.0.1"
+        },
+        "runtime": {
+          "lib/netstandard1.3/Serilog.dll": {}
+        }
+      },
+      "serilog.formatting.compact/1.0.0": {
+        "dependencies": {
+          "Serilog": "2.4.0"
+        },
+        "runtime": {
+          "lib/netstandard1.1/Serilog.Formatting.Compact.dll": {}
+        }
+      },
+      "serilog.sinks.coloredconsole/2.0.0": {
+        "dependencies": {
+          "Serilog": "2.4.0"
+        },
+        "runtime": {
+          "lib/netstandard1.3/Serilog.Sinks.ColoredConsole.dll": {}
+        }
+      },
+      "serilog.sinks.file/3.2.0": {
+        "dependencies": {
+          "Serilog": "2.4.0"
+        },
+        "runtime": {
+          "lib/netstandard1.3/Serilog.Sinks.File.dll": {}
+        }
+      },
+      "serilog.sinks.periodicbatching/2.1.0": {
+        "dependencies": {
+          "Serilog": "2.4.0"
+        },
+        "runtime": {
+          "lib/netstandard1.2/Serilog.Sinks.PeriodicBatching.dll": {}
+        }
+      },
+      "serilog.sinks.rollingfile/3.3.0": {
+        "dependencies": {
+          "Serilog.Sinks.File": "3.2.0"
+        },
+        "runtime": {
+          "lib/netstandard1.3/Serilog.Sinks.RollingFile.dll": {}
+        }
+      },
+      "serilog.sinks.seq/3.2.0": {
+        "dependencies": {
+          "Serilog": "2.4.0",
+          "Serilog.Formatting.Compact": "1.0.0",
+          "Serilog.Sinks.File": "3.2.0",
+          "Serilog.Sinks.PeriodicBatching": "2.1.0",
+          "Serilog.Sinks.RollingFile": "3.3.0",
+          "System.Net.Http": "4.3.1"
+        },
+        "runtime": {
+          "lib/netstandard1.3/Serilog.Sinks.Seq.dll": {}
+        }
+      },
+      "system.collections.nongeneric/4.0.1": {
+        "runtime": {
+          "lib/netstandard1.3/System.Collections.NonGeneric.dll": {}
         }
       },
       "system.net.http/4.3.1": {
@@ -69,6 +138,62 @@
       "sha512": "sha512-7inU6c6WBAF7xzvNFaBY5+YyJdlZskZA5+iHSUwra0kTX0WoxA+NheH5+43LeNNVvsnpKIvD6M3v2nQkcu76EQ==",
       "path": "newtonsoft.json/9.0.1",
       "hashPath": "newtonsoft.json.9.0.1.nupkg.sha512"
+    },
+    "serilog/2.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Bzfqn8iwozwOrlBMO88u0TPy0oXZb9v79rRM9cL6N/cIBUUqEKm3HNncTxIKzspYz2dEzQDHKc3ONaZJ05Cbng==",
+      "path": "serilog/2.4.0",
+      "hashPath": "serilog.2.4.0.nupkg.sha512"
+    },
+    "serilog.formatting.compact/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-r3QYz02y7+B7Ng30hyJM929OJhem7SsJ4XDUE0Zfptj2MRiQfpPUb5f58juAFjp/TnNeSX2QNzZEnHwLeoJfHQ==",
+      "path": "serilog.formatting.compact/1.0.0",
+      "hashPath": "serilog.formatting.compact.1.0.0.nupkg.sha512"
+    },
+    "serilog.sinks.coloredconsole/2.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-pAH8MO/6oPPToCnwKpSAszIVF0tPpYjKLNhAJlTxAinpcRjPrKT/1bGTW/ZqoCluVyZQl5eg1gIxEkhHEd6Uww==",
+      "path": "serilog.sinks.coloredconsole/2.0.0",
+      "hashPath": "serilog.sinks.coloredconsole.2.0.0.nupkg.sha512"
+    },
+    "serilog.sinks.file/3.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-VHbo68pMg5hwSWrzLEdZv5b/rYmIgHIRhd4d5rl8GnC5/a8Fr+RShT5kWyeJOXax1el6mNJ+dmHDOVgnNUQxaw==",
+      "path": "serilog.sinks.file/3.2.0",
+      "hashPath": "serilog.sinks.file.3.2.0.nupkg.sha512"
+    },
+    "serilog.sinks.periodicbatching/2.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-FshW9PfIdLRfFCCoyU5Z8YKg6axd0ufy9pbcgTyf/mOIZjt78zVl5lZAjUBI2YDHncS3gtH/Bf0YKqMCWh2/0Q==",
+      "path": "serilog.sinks.periodicbatching/2.1.0",
+      "hashPath": "serilog.sinks.periodicbatching.2.1.0.nupkg.sha512"
+    },
+    "serilog.sinks.rollingfile/3.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-2lT5X1r3GH4P0bRWJfhA7etGl8Q2Ipw9AACvtAHWRUSpYZ42NGVyHoVs2ALBZ/cAkkS+tA4jl80Zie144eLQPg==",
+      "path": "serilog.sinks.rollingfile/3.3.0",
+      "hashPath": "serilog.sinks.rollingfile.3.3.0.nupkg.sha512"
+    },
+    "serilog.sinks.seq/3.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-2VvfLsWl2GOxdlsDD7nFOUhZ/MMg8aIS53tBYoYCrohczwefa1bVA6Xr4ndnGdXrkwDJQQW0VOJNNmQgzXvqeA==",
+      "path": "serilog.sinks.seq/3.2.0",
+      "hashPath": "serilog.sinks.seq.3.2.0.nupkg.sha512"
+    },
+    "system.collections.nongeneric/4.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-2E+FvVAw0vtsnEf+0zHabnXjav8yzDP04K3dROYsMSccCykbJ58miyvbH0HeXX1wRCLspvm7BBTygvGd3hlg5g==",
+      "path": "system.collections.nongeneric/4.0.1",
+      "hashPath": "system.collections.nongeneric.4.0.1.nupkg.sha512"
     },
     "system.net.http/4.3.1": {
       "type": "package",

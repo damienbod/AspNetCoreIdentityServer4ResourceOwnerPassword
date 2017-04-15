@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using AspNet5SQLite.Model;
+using AspNetCoreResourceServer.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace AspNet5SQLite.Repositories
+namespace AspNetCoreResourceServer.Repositories
 {
     public class DataEventRecordRepository : IDataEventRecordRepository
     {
@@ -19,7 +19,7 @@ namespace AspNet5SQLite.Repositories
 
         public List<DataEventRecord> GetAll()
         {
-            _logger.LogCritical("Getting a the existing records");
+            _logger.LogInformation("Getting all existing records");
             return _context.DataEventRecords.ToList();
         }
 
