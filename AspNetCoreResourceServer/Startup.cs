@@ -1,5 +1,5 @@
-using AspNet5SQLite.Model;
-using AspNet5SQLite.Repositories;
+using AspNetCoreResourceServer.Model;
+using AspNetCoreResourceServer.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
