@@ -1,10 +1,4 @@
-﻿using IdentityModel;
-using IdentityModel.Client;
-using Newtonsoft.Json.Linq;
-using Serilog;
-using System;
-using System.Net.Http;
-using System.Text;
+﻿using Serilog;
 using System.Threading.Tasks;
 
 namespace ConsoleResourceOwnerFlowRefreshToken
@@ -18,6 +12,7 @@ namespace ConsoleResourceOwnerFlowRefreshToken
         {
             Log.Logger = new LoggerConfiguration()
               .MinimumLevel.Verbose()
+              .Enrich.WithProperty("App", "ConsoleResourceOwnerFlowRefreshToken")
               .Enrich.FromLogContext()
               .WriteTo.Seq("http://localhost:5341")
               .WriteTo.ColoredConsole()

@@ -18,6 +18,7 @@ namespace CustomIdentityServer4
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
+                .Enrich.WithProperty("App", "CustomIdentityServer4")
                 .Enrich.FromLogContext()
                 .WriteTo.Seq("http://localhost:5341")
                 .CreateLogger();

@@ -28,6 +28,7 @@ namespace AspNetCoreResourceServer
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
+                .Enrich.WithProperty("App", "AspNetCoreResourceServer")
                 .Enrich.FromLogContext()
                 .WriteTo.Seq("http://localhost:5341")
                 .CreateLogger();
