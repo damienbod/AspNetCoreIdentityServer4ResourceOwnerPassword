@@ -21,8 +21,8 @@ namespace ConsoleResourceOwnerFlowRefreshToken
             else
             {
                 var content = await payloadFromResourceServer.Content.ReadAsStringAsync();
-                Log.Logger.Debug("Response successful: {StatusCode}", payloadFromResourceServer.StatusCode);
-                Log.Logger.Information("Response successful: {Payload}", JArray.Parse(content));
+                Log.Logger.Verbose("Response successful: {StatusCode}", payloadFromResourceServer.StatusCode);
+                Log.Logger.Warning("Response successful: {Payload}", content);
             }
 
         }

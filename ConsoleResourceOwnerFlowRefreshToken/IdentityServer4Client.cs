@@ -58,7 +58,7 @@ namespace ConsoleResourceOwnerFlowRefreshToken
 
         private static async Task<TokenResponse> RefreshTokenAsync(string refreshToken)
         {
-            Log.Logger.Debug("Using refresh token: {RefreshToken}", refreshToken);
+            Log.Logger.Verbose("Using refresh token: {RefreshToken}", refreshToken);
 
             return await _tokenClient.RequestRefreshTokenAsync(refreshToken);
         }
@@ -67,7 +67,7 @@ namespace ConsoleResourceOwnerFlowRefreshToken
         {
             if (!response.IsError)
             {
-                Log.Logger.Debug("Token response: {TokenPayload}", response.Json);
+                Log.Logger.Debug("Token response: {TokenPayload}", response.Json.ToString());
 
                 if (response.AccessToken.Contains("."))
                 {
@@ -75,8 +75,8 @@ namespace ConsoleResourceOwnerFlowRefreshToken
                     var header = parts[0];
                     var claims = parts[1];
 
-                    Log.Logger.Debug("Access Token Header decoded (AccessHeader)", JObject.Parse(Encoding.UTF8.GetString(Base64Url.Decode(header))));
-                    Log.Logger.Debug("Access Token claims decoded (Claims)", JObject.Parse(Encoding.UTF8.GetString(Base64Url.Decode(claims))));
+                    Log.Logger.Debug("Access Token Header decoded {AccessHeader}", JObject.Parse(Encoding.UTF8.GetString(Base64Url.Decode(header))).ToString());
+                    Log.Logger.Debug("Access Token claims decoded {Claims}", JObject.Parse(Encoding.UTF8.GetString(Base64Url.Decode(claims))).ToString());
                 }
             }
             else
