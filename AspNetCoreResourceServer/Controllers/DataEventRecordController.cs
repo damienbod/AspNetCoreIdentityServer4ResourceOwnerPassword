@@ -1,32 +1,26 @@
-using AspNetCoreResourceServer.Model;
-using AspNetCoreResourceServer.Repositories;
+using AspNet5SQLite.Model;
+using AspNet5SQLite.Repositories;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
-namespace AspNetCoreResourceServer.Controllers
+namespace AspNet5SQLite.Controllers
 {
-    [Authorize]
+    [Authorize("dataEventRecords")]
     [Route("api/[controller]")]
     public class DataEventRecordsController : Controller
     {
         private readonly IDataEventRecordRepository _dataEventRecordRepository;
-        private readonly ILogger _logger;
 
-
-        public DataEventRecordsController(IDataEventRecordRepository dataEventRecordRepository, ILoggerFactory loggerFactory)
+        public DataEventRecordsController(IDataEventRecordRepository dataEventRecordRepository)
         {
             _dataEventRecordRepository = dataEventRecordRepository;
-            _logger = loggerFactory.CreateLogger("DataEventRecordsController");
         }
 
         [Authorize("dataEventRecordsUser")]
         [HttpGet]
         public IActionResult Get()
         {
-            var userName = HttpContext.User.FindFirst("username")?.Value;
-            _logger.LogInformation("User requested all data {UserName}", userName);
             return Ok(_dataEventRecordRepository.GetAll());
         }
 
