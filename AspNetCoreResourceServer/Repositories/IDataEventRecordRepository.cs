@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using AspNetCoreResourceServer.Model;
+using AspNet5SQLite.Model;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AspNetCoreResourceServer.Repositories
+namespace AspNet5SQLite.Repositories
 {
     public interface IDataEventRecordRepository
     {

@@ -5,8 +5,8 @@
 using IdentityModel;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
+using IdentityServer4.Test;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -15,10 +15,13 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using IdentityServer4.Events;
+using IdentityServer4.Extensions;
+using IdentityServer4.Models;
 using CustomIdentityServer4.Filters;
+using CustomIdentityServer4.UserServices;
 using CustomIdentityServer4.Models;
 using IdentityServer4;
-using CustomIdentityServer4.UserServices;
 
 namespace CustomIdentityServer4.Controllers
 {
@@ -38,10 +41,11 @@ namespace CustomIdentityServer4.Controllers
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IHttpContextAccessor httpContextAccessor,
+            IAuthenticationSchemeProvider schemeProvider,
             IUserRepository userRepository)
         {
             _interaction = interaction;
-            _account = new AccountService(interaction, httpContextAccessor, clientStore);
+            _account = new AccountService(interaction, httpContextAccessor, schemeProvider, clientStore);
             _userRepository = userRepository;
         }
 
@@ -88,7 +92,7 @@ namespace CustomIdentityServer4.Controllers
 
                     // issue authentication cookie with subject ID and username
                     var user = _userRepository.FindByUsername(model.Username);
-                    await HttpContext.Authentication.SignInAsync(user.SubjectId, user.UserName, props);
+                    await HttpContext.SignInAsync(user.SubjectId, user.UserName, props);
 
                     // make sure the returnUrl is still valid, and if yes - redirect back to authorize endpoint
                     if (_interaction.IsValidReturnUrl(model.ReturnUrl))
@@ -138,7 +142,7 @@ namespace CustomIdentityServer4.Controllers
                 try
                 {
                     // hack: try/catch to handle social providers that throw
-                    await HttpContext.Authentication.SignOutAsync(vm.ExternalAuthenticationScheme, 
+                    await HttpContext.SignOutAsync(vm.ExternalAuthenticationScheme, 
                         new AuthenticationProperties { RedirectUri = url });
                 }
                 catch(NotSupportedException) // this is for the external providers that don't have signout
@@ -150,7 +154,7 @@ namespace CustomIdentityServer4.Controllers
             }
 
             // delete local authentication cookie
-            await HttpContext.Authentication.SignOutAsync();
+            await HttpContext.SignOutAsync();
 
             return View("LoggedOut", vm);
         }
@@ -176,7 +180,7 @@ namespace CustomIdentityServer4.Controllers
                     id.AddClaim(new Claim(ClaimTypes.NameIdentifier, HttpContext.User.Identity.Name));
                     id.AddClaim(new Claim(ClaimTypes.Name, HttpContext.User.Identity.Name));
 
-                    await HttpContext.Authentication.SignInAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme, new ClaimsPrincipal(id), props);
+                    await HttpContext.SignInAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme, new ClaimsPrincipal(id), props);
                     return Redirect(returnUrl);
                 }
                 else
