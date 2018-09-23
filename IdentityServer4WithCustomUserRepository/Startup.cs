@@ -23,14 +23,6 @@ namespace CustomIdentityServer4
 
         public Startup(IHostingEnvironment env)
         {
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Verbose()
-                .Enrich.WithProperty("App", "CustomIdentityServer4")
-                .Enrich.FromLogContext()
-                .WriteTo.Seq("http://localhost:5341")
-                //.WriteTo.RollingFile("../Log/CustomIdentityServer4")
-                .CreateLogger();
-
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -101,12 +93,6 @@ namespace CustomIdentityServer4
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
-            // Add Serilog to the logging pipeline
-            loggerFactory.AddSerilog();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
