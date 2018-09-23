@@ -8,17 +8,11 @@ namespace CustomIdentityServer4
     {
         public static void Main(string[] args)
         {
-            Console.Title = "IdentityServer";
-
-            var host = new WebHostBuilder()
-                .UseKestrel()
-                .UseUrls("http://localhost:5000")
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
-                .UseStartup<Startup>()
-                .Build();
-
-            host.Run();
+            CreateWebHostBuilder(args).Build().Run();
         }
+
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>();
     }
 }
