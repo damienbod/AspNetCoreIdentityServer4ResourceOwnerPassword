@@ -41,10 +41,11 @@ namespace CustomIdentityServer4.Controllers
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IHttpContextAccessor httpContextAccessor,
+            IAuthenticationSchemeProvider schemeProvider,
             IUserRepository userRepository)
         {
             _interaction = interaction;
-            _account = new AccountService(interaction, httpContextAccessor, clientStore);
+            _account = new AccountService(interaction, httpContextAccessor, schemeProvider, clientStore);
             _userRepository = userRepository;
         }
 

@@ -7,7 +7,9 @@ using IdentityServer4;
 using IdentityServer4.Extensions;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,15 +20,18 @@ namespace CustomIdentityServer4.Models
         private readonly IClientStore _clientStore;
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAuthenticationSchemeProvider _schemeProvider;
 
         public AccountService(
             IIdentityServerInteractionService interaction,
             IHttpContextAccessor httpContextAccessor,
+            IAuthenticationSchemeProvider schemeProvider,
             IClientStore clientStore)
         {
             _interaction = interaction;
             _httpContextAccessor = httpContextAccessor;
             _clientStore = clientStore;
+            _schemeProvider = schemeProvider;
         }
 
         public async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl)
@@ -44,20 +49,22 @@ namespace CustomIdentityServer4.Models
                 };
             }
 
-            var schemes = _httpContextAccessor.HttpContext.Authentication.GetAuthenticationSchemes();
+            var schemes = await _schemeProvider.GetAllSchemesAsync();
 
             var providers = schemes
-                .Where(x => x.DisplayName != null && !AccountOptions.WindowsAuthenticationSchemes.Contains(x.AuthenticationScheme))
+                .Where(x => x.DisplayName != null ||
+                            (x.Name.Equals(AccountOptions.WindowsAuthenticationDisplayName, StringComparison.OrdinalIgnoreCase))
+                )
                 .Select(x => new ExternalProvider
                 {
                     DisplayName = x.DisplayName,
-                    AuthenticationScheme = x.AuthenticationScheme
+                    AuthenticationScheme = x.Name
                 }).ToList();
 
             if (AccountOptions.WindowsAuthenticationEnabled)
             {
                 // this is needed to handle windows auth schemes
-                var windowsSchemes = schemes.Where(s => AccountOptions.WindowsAuthenticationSchemes.Contains(s.AuthenticationScheme));
+                var windowsSchemes = schemes.Where(s => AccountOptions.WindowsAuthenticationSchemes.Contains(s.DisplayName));
                 if (windowsSchemes.Any())
                 {
                     providers.Add(new ExternalProvider
@@ -105,7 +112,7 @@ namespace CustomIdentityServer4.Models
         {
             var vm = new LogoutViewModel { LogoutId = logoutId, ShowLogoutPrompt = AccountOptions.ShowLogoutPrompt };
 
-            var user = await _httpContextAccessor.HttpContext.GetIdentityServerUserAsync();
+            var user = _httpContextAccessor.HttpContext.User;
             if (user == null || user.Identity.IsAuthenticated == false)
             {
                 // if the user is not authenticated, then just show logged out page
@@ -140,7 +147,7 @@ namespace CustomIdentityServer4.Models
                 LogoutId = logoutId
             };
 
-            var user = await _httpContextAccessor.HttpContext.GetIdentityServerUserAsync();
+            var user = _httpContextAccessor.HttpContext.User;
             if (user != null)
             {
                 var idp = user.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
