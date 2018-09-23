@@ -17,8 +17,7 @@ namespace QuickstartIdentityServer
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
-                new IdentityResources.Email(),
-                new IdentityResource("dataeventrecordsscope",new []{ "role", "admin", "user", "dataEventRecords", "dataEventRecords.admin" , "dataEventRecords.user" } )
+                new IdentityResources.Email()
             };
         }
 
