@@ -1,0 +1,34 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using CustomIdentityServer4.Models
+@using CustomIdentityServer4.Resources
+@inject LocService SharedLocalizer
+﻿@using IdentityServer4.Extensions
+@{
+    string name = null;
+    if (!true.Equals(ViewData["signed-out"]))
+    {
+        var user = Context.User;
+        name = user?.FindFirst("name")?.Value;
+    }
+}
+
+@if (name != null)
+{
+    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
+        <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">@name</a>
+            </li>
+            <li class="nav-item">
+                <button type="submit" class="btn btn-link navbar-btn navbar-link">@SharedLocalizer.GetLocalizedHtmlString("LOGOUT")</button>
+            </li>
+        </ul>
+    </form>
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Account" asp-action="Register">@SharedLocalizer.GetLocalizedHtmlString("REGISTER")</a></li>
+        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">@SharedLocalizer.GetLocalizedHtmlString("ACCOUNT_LOGIN")</a></li>
+    </ul>
+}
