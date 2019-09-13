@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace AspNet5SQLite.Model
+namespace AspNetCoreResourceServer.Model
 {
-    // >dnx . ef migration add testMigration
-
     public class DataEventRecord
     {
         public long Id { get; set; }

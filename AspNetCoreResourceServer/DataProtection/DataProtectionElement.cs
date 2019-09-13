@@ -1,6 +1,6 @@
 using System;
 
-namespace ResourceServer.DataProtection
+namespace AspNetCoreResourceServer.DataProtection
 {
     public class DataProtectionElement
     {
