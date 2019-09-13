@@ -15,6 +15,7 @@ using AspNetCoreResourceServer.DataProtection;
 using System;
 using AspNetCoreResourceServer.Certificate;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
 
 namespace AspNetCoreResourceServer
 {
@@ -83,8 +84,6 @@ namespace AspNetCoreResourceServer
                 options.UseSqlite(connection)
             );
 
-            services.AddCors();
-
             var policy = new Microsoft.AspNetCore.Cors.Infrastructure.CorsPolicy();
 
             policy.Headers.Add("*");
@@ -137,19 +136,20 @@ namespace AspNetCoreResourceServer
         public void Configure(IApplicationBuilder app)
         {
             app.UseCors("corsGlobalPolicy");
-            app.UseExceptionHandler("/Home/Error");
+           
+            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
             app.UseStaticFiles();
+            app.UseHttpsRedirection();
+
+            app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseRouting();
-
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllers();
             });
         }
     }
