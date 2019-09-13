@@ -14,27 +14,20 @@ using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 using CustomIdentityServer4.Resources;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Hosting;
 
 namespace CustomIdentityServer4
 {
     public class Startup
     {
-        private readonly IHostingEnvironment _environment;
-
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
-				
+            Configuration = configuration;
             _environment = env;
-
-            builder.AddEnvironmentVariables();
-            Configuration = builder.Build();
         }
 
-        public IConfigurationRoot Configuration { get; }
+        public IConfiguration Configuration { get; }
+        public IWebHostEnvironment _environment { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -67,7 +60,7 @@ namespace CustomIdentityServer4
                 });
 				
             
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+            services.AddControllersWithViews().SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddViewLocalization()
                 .AddDataAnnotationsLocalization(options =>
                 {
@@ -91,7 +84,7 @@ namespace CustomIdentityServer4
                 .AddCustomUserStore();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -105,15 +98,19 @@ namespace CustomIdentityServer4
 
 			var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
             app.UseRequestLocalization(locOptions.Value);
-			
-            app.UseStaticFiles();
+
             app.UseIdentityServer();
 
-            app.UseMvc(routes =>
+            app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
