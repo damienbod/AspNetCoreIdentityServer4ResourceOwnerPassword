@@ -99,6 +99,7 @@ namespace CustomIdentityServer4
 			var locOptions = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
             app.UseRequestLocalization(locOptions.Value);
 
+            app.UseStaticFiles();
             app.UseIdentityServer();
 
             app.UseRouting();
