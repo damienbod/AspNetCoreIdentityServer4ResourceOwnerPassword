@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace ResourceServer.DataProtection
+namespace AspNetCoreResourceServer.DataProtection
 {
     public class SqlXmlRepository : IXmlRepository
     {

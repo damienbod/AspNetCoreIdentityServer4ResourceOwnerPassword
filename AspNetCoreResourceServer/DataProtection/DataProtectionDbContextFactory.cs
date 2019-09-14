@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
 
-namespace ResourceServer.DataProtection
+namespace AspNetCoreResourceServer.DataProtection
 {
     public class DataProtectionDbContextFactory : IDesignTimeDbContextFactory<DataProtectionDbContext>
     {

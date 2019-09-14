@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.KeyVault;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
-namespace ResourceServer.Certificate
+namespace AspNetCoreResourceServer.Certificate
 {
     public class KeyVaultCertificateService : ICertificateService
     {

@@ -1,9 +1,10 @@
 ﻿using System;
-using System.IO;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
+using Serilog.Sinks.SystemConsole.Themes;
 
 namespace CustomIdentityServer4
 {
@@ -12,18 +13,16 @@ namespace CustomIdentityServer4
         public static int Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
-           .MinimumLevel.Debug()
-           .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-           .Enrich.FromLogContext()
-           .Enrich.WithProperty("App", "CustomIdentityServer4")
-           .WriteTo.RollingFile("logs/log-{Date}.txt")
-           .WriteTo.Seq("http://localhost:5341")
-           .CreateLogger();
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .CreateLogger();
 
             try
             {
                 Log.Information("Starting web host");
-                BuildWebHost(args).Run();
+                CreateHostBuilder(args).Build().Run();
                 return 0;
             }
             catch (Exception ex)
@@ -35,13 +34,19 @@ namespace CustomIdentityServer4
             {
                 Log.CloseAndFlush();
             }
-
         }
-        public static IWebHost BuildWebHost(string[] args) =>
-              WebHost.CreateDefaultBuilder(args)
-              .UseStartup<Startup>()
-                  .UseSerilog() // <-- Add this line
-                  .Build();
 
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>()
+                    .UseSerilog((hostingContext, loggerConfiguration) => loggerConfiguration
+                    .ReadFrom.Configuration(hostingContext.Configuration)
+                    .Enrich.FromLogContext()
+                    .WriteTo.File("../StsLogs.txt")
+                    .WriteTo.Console(theme: AnsiConsoleTheme.Code)
+                );
+            });
     }
 }

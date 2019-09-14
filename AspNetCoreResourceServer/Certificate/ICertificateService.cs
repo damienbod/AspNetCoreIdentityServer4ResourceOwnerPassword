@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 
-namespace ResourceServer.Certificate
+namespace AspNetCoreResourceServer.Certificate
 {
     public interface ICertificateService
     {
