@@ -11,27 +11,22 @@ namespace ConsoleResourceOwnerFlowRefreshToken
 {
     public static class IdentityServer4Client
     {
-        private static TokenClient _tokenClient;
         private static HttpClient _httpClient = new HttpClient();
         private static string _stsUrl = "https://localhost:44318";
+        private static DiscoveryDocumentResponse _disco;
 
         public static async Task<TokenResponse> LoginAsync(string user, string password)
         {
             Console.Title = "Console ResourceOwner Flow RefreshToken";
 
-            var disco = await HttpClientDiscoveryExtensions.GetDiscoveryDocumentAsync(
+            _disco = await HttpClientDiscoveryExtensions.GetDiscoveryDocumentAsync(
                     _httpClient,
                     _stsUrl);
 
-            if (disco.IsError)
+            if (_disco.IsError)
             {
-                throw new ApplicationException($"Status code: {disco.IsError}, Error: {disco.Error}");
+                throw new ApplicationException($"Status code: {_disco.IsError}, Error: {_disco.Error}");
             }
-
-            _tokenClient = new TokenClient(
-                disco.TokenEndpoint,
-                "resourceownerclient",
-                "dataEventRecordsSecret");
 
             return await RequestTokenAsync(user, password);
         }
@@ -59,17 +54,36 @@ namespace ConsoleResourceOwnerFlowRefreshToken
         private static async Task<TokenResponse> RequestTokenAsync(string user, string password)
         {
             Log.Logger.Verbose("begin RequestTokenAsync");
-            return await _tokenClient.RequestResourceOwnerPasswordAsync(
-                user,
-                password,
-                "email openid dataEventRecords offline_access");
+            var response = await _httpClient.RequestPasswordTokenAsync(new PasswordTokenRequest
+            {
+                Address = _disco.TokenEndpoint,
+
+                ClientId = "resourceownerclient",
+                ClientSecret = "dataEventRecordsSecret",
+                Scope = "email openid dataEventRecords offline_access",
+
+                UserName = user,
+                Password = password
+            });
+
+            return response;
         }
 
         private static async Task<TokenResponse> RefreshTokenAsync(string refreshToken)
         {
             Log.Logger.Verbose("Using refresh token: {RefreshToken}", refreshToken);
 
-            return await _tokenClient.RequestRefreshTokenAsync(refreshToken);
+            var response = await _httpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
+            {
+                Address = _disco.TokenEndpoint,
+
+                ClientId = "resourceownerclient",
+                ClientSecret = "dataEventRecordsSecret",
+
+                RefreshToken = refreshToken
+            });
+
+            return response;
         }
 
         private static void ShowResponse(TokenResponse response)
