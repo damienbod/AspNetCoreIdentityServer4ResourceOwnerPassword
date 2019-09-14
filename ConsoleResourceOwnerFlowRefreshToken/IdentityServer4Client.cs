@@ -3,6 +3,7 @@ using IdentityModel.Client;
 using Newtonsoft.Json.Linq;
 using Serilog;
 using System;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,13 +12,21 @@ namespace ConsoleResourceOwnerFlowRefreshToken
     public static class IdentityServer4Client
     {
         private static TokenClient _tokenClient;
+        private static HttpClient _httpClient = new HttpClient();
+        private static string _stsUrl = "https://localhost:44318";
 
         public static async Task<TokenResponse> LoginAsync(string user, string password)
         {
             Console.Title = "Console ResourceOwner Flow RefreshToken";
 
-            var disco = await DiscoveryClient.GetAsync("https://localhost:44318");
-            if (disco.IsError) throw new Exception(disco.Error);
+            var disco = await HttpClientDiscoveryExtensions.GetDiscoveryDocumentAsync(
+                    _httpClient,
+                    _stsUrl);
+
+            if (disco.IsError)
+            {
+                throw new ApplicationException($"Status code: {disco.IsError}, Error: {disco.Error}");
+            }
 
             _tokenClient = new TokenClient(
                 disco.TokenEndpoint,
