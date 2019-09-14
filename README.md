@@ -10,6 +10,8 @@ https://damienbod.com/2017/04/14/asp-net-core-identityserver4-resource-owner-pas
 
 ## History
 
+2019-09-14 Updated to .NET Core 3.0
+
 2019-03-29 Updated to .NET Core 2.2
 
 2018-09-23 Updated to .NET Core 2.1
