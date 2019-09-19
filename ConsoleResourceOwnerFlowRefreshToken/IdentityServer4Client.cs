@@ -76,10 +76,8 @@ namespace ConsoleResourceOwnerFlowRefreshToken
             var response = await _httpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
             {
                 Address = _disco.TokenEndpoint,
-
                 ClientId = "resourceownerclient",
                 ClientSecret = "dataEventRecordsSecret",
-
                 RefreshToken = refreshToken
             });
 
