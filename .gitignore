@@ -12,3 +12,4 @@ ConsoleResourceOwnerFlowRefreshToken/bin/Debug/netcoreapp1.1/ConsoleResourceOwne
 IdentityServer4WithCustomUserRepository/wwwroot
 Log
 /IdentityServer4WithCustomUserRepository/node_modules
+/StsLogs.txt
