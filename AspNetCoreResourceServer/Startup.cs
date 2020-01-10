@@ -126,11 +126,19 @@ namespace AspNetCoreResourceServer
                .AddNewtonsoftJson()
                .AddJsonOptions(options =>
                {
-                    //options.JsonSerializerOptions.ContractResolver = new DefaultContractResolver();
-                })
-               .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                   //options.JsonSerializerOptions.ContractResolver = new DefaultContractResolver();
+               });
 
             services.AddScoped<IDataEventRecordRepository, DataEventRecordRepository>();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "API",
+                });
+            });
         }
 
         public void Configure(IApplicationBuilder app)
@@ -150,6 +158,13 @@ namespace AspNetCoreResourceServer
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
             });
         }
     }
