@@ -7,6 +7,7 @@ using System.Collections.Generic;
 namespace QuickstartIdentityServer
 {
     using IdentityServer4;
+    using System;
     using System.Security.Claims;
 
     public class Config
@@ -25,7 +26,7 @@ namespace QuickstartIdentityServer
         {
             return new List<ApiResource>
             {
-                new ApiResource("dataEventRecords")
+                new ApiResource("dataEventRecordsApi","Data Event Records API",new List<string> { "role", "admin", "user", "dataEventRecords", "dataEventRecords.admin", "dataEventRecords.user" })
                 {
                     ApiSecrets =
                     {
@@ -33,12 +34,20 @@ namespace QuickstartIdentityServer
                     },
                     Scopes =
                     {
-                        new Scope
-                        {
-                            Name = "dataeventrecordsscope",
-                            DisplayName = "Scope for the dataEventRecords ApiResource"
-                        }
-                    },
+                        "dataEventRecordsScope",
+                    }
+                }
+            };
+        }
+
+        public static IEnumerable<ApiScope> GetApiScopes()
+        {
+            return new List<ApiScope>
+            {
+                new ApiScope
+                {
+                    Name = "dataEventRecordsScope",
+                    DisplayName = "Scope for the dataEventRecords ApiResource",
                     UserClaims = { "role", "admin", "user", "dataEventRecords", "dataEventRecords.admin", "dataEventRecords.user" }
                 }
             };
@@ -70,7 +79,7 @@ namespace QuickstartIdentityServer
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Email,
                         IdentityServerConstants.StandardScopes.OfflineAccess,
-                        "dataEventRecords"
+                        "dataEventRecordsScope"
                     }
                 }
             };

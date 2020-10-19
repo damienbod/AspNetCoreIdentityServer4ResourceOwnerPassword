@@ -60,7 +60,7 @@ namespace ConsoleResourceOwnerFlowRefreshToken
 
                 ClientId = "resourceownerclient",
                 ClientSecret = "dataEventRecordsSecret",
-                Scope = "email openid dataEventRecords offline_access",
+                Scope = "email openid dataEventRecordsScope offline_access",
 
                 UserName = user,
                 Password = password
