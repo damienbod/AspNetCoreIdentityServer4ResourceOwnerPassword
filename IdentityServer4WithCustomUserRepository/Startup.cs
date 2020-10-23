@@ -60,7 +60,7 @@ namespace CustomIdentityServer4
                 });
 				
             
-            services.AddControllersWithViews().SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+            services.AddControllersWithViews()
                 .AddViewLocalization()
                 .AddDataAnnotationsLocalization(options =>
                 {
