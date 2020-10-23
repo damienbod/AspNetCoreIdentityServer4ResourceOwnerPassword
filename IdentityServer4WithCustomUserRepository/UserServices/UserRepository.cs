@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Threading.Tasks;
 
 namespace CustomIdentityServer4.UserServices
 {
@@ -34,9 +35,10 @@ namespace CustomIdentityServer4.UserServices
             return false;
         }
 
-        public CustomUser FindBySubjectId(string subjectId)
+        public Task<CustomUser> FindBySubjectId(string subjectId)
         {
-            return _users.FirstOrDefault(x => x.SubjectId == subjectId);
+            var list = _users.FirstOrDefault(x => x.SubjectId == subjectId);
+            return Task.Run(() => list);
         }
 
         public CustomUser FindByUsername(string username)
