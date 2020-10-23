@@ -10,6 +10,8 @@ https://damienbod.com/2017/04/14/asp-net-core-identityserver4-resource-owner-pas
 
 ## History
 
+2020-10-23 Updated to .IdentityServer4, nuget packages , npm packages
+
 2020-01-10 Updated to .NET Core 3.1
 
 2019-09-14 Updated to .NET Core 3.0
