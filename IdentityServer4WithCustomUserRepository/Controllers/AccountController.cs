@@ -92,7 +92,13 @@ namespace CustomIdentityServer4.Controllers
 
                     // issue authentication cookie with subject ID and username
                     var user = _userRepository.FindByUsername(model.Username);
-                    await HttpContext.SignInAsync(user.SubjectId, user.UserName, props);
+
+                    var iduser = new IdentityServerUser(user.SubjectId)
+                    {
+                        DisplayName = user.UserName
+                    };
+
+                    await HttpContext.SignInAsync(iduser, props);
 
                     // make sure the returnUrl is still valid, and if yes - redirect back to authorize endpoint
                     if (_interaction.IsValidReturnUrl(model.ReturnUrl))

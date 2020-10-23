@@ -14,6 +14,6 @@ namespace CustomIdentityServer4.Models
         public bool AllowRememberConsent { get; set; }
 
         public IEnumerable<ScopeViewModel> IdentityScopes { get; set; }
-        public IEnumerable<ScopeViewModel> ResourceScopes { get; set; }
+        public IEnumerable<ScopeViewModel> APIResourceScopes { get; set; }
     }
 }

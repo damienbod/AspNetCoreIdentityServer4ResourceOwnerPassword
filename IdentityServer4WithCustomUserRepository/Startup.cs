@@ -80,6 +80,7 @@ namespace CustomIdentityServer4
                 .AddSigningCredential(cert)
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetApiResources())
+                .AddInMemoryApiScopes(Config.GetApiScopes())
                 .AddInMemoryClients(Config.GetClients())
                 .AddCustomUserStore();
         }

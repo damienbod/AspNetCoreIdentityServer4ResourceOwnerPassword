@@ -102,7 +102,7 @@ namespace AspNetCoreResourceServer
               .AddIdentityServerAuthentication(options =>
               {
                   options.Authority = "https://localhost:44318/";
-                  options.ApiName = "dataEventRecords";
+                  options.ApiName = "dataEventRecordsApi";
                   options.ApiSecret = "dataEventRecordsSecret";
               });
 
@@ -118,7 +118,7 @@ namespace AspNetCoreResourceServer
                 });
                 options.AddPolicy("dataEventRecords", policyUser =>
                 {
-                    policyUser.RequireClaim("scope", "dataEventRecords");
+                    policyUser.RequireClaim("scope", "dataEventRecordsScope");
                 });
             });
 

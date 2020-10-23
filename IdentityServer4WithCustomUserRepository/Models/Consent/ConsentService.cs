@@ -41,7 +41,10 @@ namespace CustomIdentityServer4.Models
             // user clicked 'no' - send back the standard 'access_denied' response
             if (model.Button == "no")
             {
-                grantedConsent = ConsentResponse.Denied;
+                grantedConsent = new ConsentResponse
+                {
+                    Error = AuthorizationError.AccessDenied,
+                };
             }
             // user clicked 'yes' - validate the data
             else if (model.Button == "yes" && model != null)
@@ -58,7 +61,7 @@ namespace CustomIdentityServer4.Models
                     grantedConsent = new ConsentResponse
                     {
                         RememberConsent = model.RememberConsent,
-                        ScopesConsented = scopes.ToArray()
+                        ScopesValuesConsented = scopes.ToArray()
                     };
                 }
                 else
@@ -97,22 +100,22 @@ namespace CustomIdentityServer4.Models
             var request = await _interaction.GetAuthorizationContextAsync(returnUrl);
             if (request != null)
             {
-                var client = await _clientStore.FindEnabledClientByIdAsync(request.ClientId);
+                var client = await _clientStore.FindEnabledClientByIdAsync(request.Client.ClientId);
                 if (client != null)
                 {
-                    var resources = await _resourceStore.FindEnabledResourcesByScopeAsync(request.ScopesRequested);
+                    var resources = await _resourceStore.FindEnabledResourcesByScopeAsync(request.RequestObjectValues.Select(x => x.Key));
                     if (resources != null && (resources.IdentityResources.Any() || resources.ApiResources.Any()))
                     {
                         return CreateConsentViewModel(model, returnUrl, request, client, resources);
                     }
                     else
                     {
-                        _logger.LogError("No scopes matching: {0}", request.ScopesRequested.Aggregate((x, y) => x + ", " + y));
+                        _logger.LogError("No scopes matching: {0}", request.RequestObjectValues.Select(x => x.Key));
                     }
                 }
                 else
                 {
-                    _logger.LogError("Invalid client id: {0}", request.ClientId);
+                    _logger.LogError("Invalid client id: {0}", request.Client.ClientId);
                 }
             }
             else
@@ -142,10 +145,10 @@ namespace CustomIdentityServer4.Models
             };
 
             vm.IdentityScopes = resources.IdentityResources.Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
-            vm.ResourceScopes = resources.ApiResources.SelectMany(x => x.Scopes).Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
+            vm.APIResourceScopes = resources.ApiResources.Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Any(sc => x.Scopes.Contains(sc)) || model == null)).ToArray();
             if (ConsentOptions.EnableOfflineAccess && resources.OfflineAccess)
             {
-                vm.ResourceScopes = vm.ResourceScopes.Union(new ScopeViewModel[] {
+                vm.APIResourceScopes = vm.APIResourceScopes.Union(new ScopeViewModel[] {
                     GetOfflineAccessScope(vm.ScopesConsented.Contains(IdentityServerConstants.StandardScopes.OfflineAccess) || model == null)
                 });
             }
@@ -166,16 +169,16 @@ namespace CustomIdentityServer4.Models
             };
         }
 
-        public ScopeViewModel CreateScopeViewModel(Scope scope, bool check)
+        public ScopeViewModel CreateScopeViewModel(ApiResource api, bool check)
         {
             return new ScopeViewModel
             {
-                Name = scope.Name,
-                DisplayName = scope.DisplayName,
-                Description = scope.Description,
-                Emphasize = scope.Emphasize,
-                Required = scope.Required,
-                Checked = check || scope.Required,
+                Name = api.Name,
+                DisplayName = api.DisplayName,
+                Description = api.Description,
+                Emphasize = false,
+                Required = false,
+                Checked = check,
             };
         }
 
