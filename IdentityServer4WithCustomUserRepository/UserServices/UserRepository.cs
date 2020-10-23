@@ -38,7 +38,7 @@ namespace CustomIdentityServer4.UserServices
         public Task<CustomUser> FindBySubjectId(string subjectId)
         {
             var list = _users.FirstOrDefault(x => x.SubjectId == subjectId);
-            return Task.Run(() => list);
+            return Task.FromResult(list);
         }
 
         public CustomUser FindByUsername(string username)
