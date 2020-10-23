@@ -15,7 +15,7 @@ namespace ConsoleResourceOwnerFlowRefreshToken
               .Enrich.WithProperty("App", "ConsoleResourceOwnerFlowRefreshToken")
               .Enrich.FromLogContext()
               .WriteTo.Seq("http://localhost:5341")
-              .WriteTo.ColoredConsole()
+              .WriteTo.Console()
               //.WriteTo.RollingFile("../Log/ConsoleResourceOwnerFlowRefreshToken")
               .CreateLogger();
 
